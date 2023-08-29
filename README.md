@@ -20,6 +20,8 @@ bzip2 -d nucl.fasta.bz2
 cd ..
 ```
 
+**Noted:** You still need to install Java if your device does contain such an env
+
 ## Usage
 ### 1 Predicting host for your viruses
 The input should be a fasta file containing the viral sequences. We provide an example file named "test_contigs.fa". Then, the only command that you need to run is 
