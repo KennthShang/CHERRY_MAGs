@@ -261,7 +261,9 @@ if inputs.mode == 'virus':
             node2pred[id2node[i]] = sorted(pred_label_score, key=lambda tup: tup[1], reverse=True)
         for virus in crispr_pred:
             if virus not in node2pred:
-                pred = prokaryote_df[prokaryote_df['Accession'] == crispr_pred[virus]]['Species'].values[0]
+                mags = crispr_pred[virus]
+                mags = mags.split('_CRISPR_')[0]
+                pred = prokaryote_df[prokaryote_df['Accession'] == mags]['Species'].values[0]
                 node2pred[virus] = [(pred, 1)]
         # dump the prediction
         with open(f"tmp_pred/predict.csv", 'w') as file_out:
@@ -276,43 +278,14 @@ if inputs.mode == 'virus':
                     if cnt > inputs.topk:
                         break
                     cnt+=1
-                    file_out.write(f'{label},{score:.2f},')
+                    if score > inputs.t:
+                        file_out.write(f'{label},{score:.2f},')
+                    else:
+                        file_out.write(f'cannot_find_MAGs,low confidence,')
                 file_out.write('\n')
 
 
 
-
-# predicting virus
-if inputs.mode == 'prokaryote':
-    candidate_host = []
-    for file in os.listdir('new_prokaryote/'):
-        candidate_host.append(file.rsplit('.', 1)[0])
-    candidateidx = []
-    for host in candidate_host:
-        if host in node2id:
-            candidateidx.append(node2id[host])
-    host2pred = {}
-    with torch.no_grad():
-        encode = net((feature, support))
-        for host in candidate_host:
-            if host not in node2id:
-                host2pred[host] = "unknown"
-            else:
-                prokaryote_feature = encode[node2id[host]]
-                for i in range(len(encode)):
-                    if i in trainable_host_idx or i in candidateidx:
-                        continue
-                    virus_feature = encode[i]
-                    logit = torch.sigmoid(decoder(virus_feature - prokaryote_feature))
-                    if logit > inputs.t:
-                        try:
-                            host2pred[host].append(id2node[i])
-                        except:
-                            host2pred[host] = [id2node[i]]
-    with open('tmp_pred/predict.csv', 'w') as file:
-        file.write('prokaryote,virus\n')
-        for prokaryote in host2pred:
-            file.write(prokaryote+','+ "|".join(host2pred[prokaryote])+'\n')
 
 
 

@@ -161,7 +161,9 @@ for node in G.nodes():
             test_id[node] = 1
         # CRISPR
         elif node in crispr_pred:
-            node2label[node] = prokaryote_df[prokaryote_df['Accession'] == crispr_pred[node]]['Species'].values[0]
+            mags = crispr_pred[node]
+            mags = mags.split('_CRISPR_')[0]
+            node2label[node] = prokaryote_df[prokaryote_df['Accession'] == mags]['Species'].values[0]
             test_id[node] = 1
         elif node in virus_pred:
             node2label[node] = virus_df[virus_df['Accession'] == virus_pred[node]]['Species'].values[0]
