@@ -37,6 +37,8 @@ The input should be a fasta file containing the viral sequences. We provide an e
                             predict only for sequence >= len bp (default 8000)
       --model MODEL (pretrain or retrain)
                             predicting host with pretrained parameters or retrained paramters (default pretrain)
+      --t THRESHOLD
+                            The threshold for a confident prediction (default 0.5)
       --topk TOPK_PRED
                             The host prediction with topk score (default 1)
 
