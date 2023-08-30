@@ -266,23 +266,42 @@ if inputs.mode == 'virus':
                 pred = prokaryote_df[prokaryote_df['Accession'] == mags]['Species'].values[0]
                 node2pred[virus] = [(pred, 1)]
         # dump the prediction
-        with open(f"tmp_pred/predict.csv", 'w') as file_out:
-            file_out.write('contig,')
-            for i in range(inputs.topk):
-                file_out.write(f'Top_{i+1}_label,Score_{i+1},')
-            file_out.write('\n')
-            for contig in node2pred:
-                file_out.write(f'{contig},')
-                cnt = 1
-                for label, score in node2pred[contig]:
-                    if cnt > inputs.topk:
-                        break
-                    cnt+=1
-                    if score > inputs.t:
-                        file_out.write(f'{label},{score:.2f},')
-                    else:
-                        file_out.write(f'cannot_find_MAGs,low confidence,')
+        if inputs.topk > 1:
+            with open(f"tmp_pred/predict.csv", 'w') as file_out:
+                file_out.write('contig,')
+                for i in range(inputs.topk):
+                    file_out.write(f'Top_{i+1}_label,Score_{i+1},')
                 file_out.write('\n')
+                for contig in node2pred:
+                    file_out.write(f'{contig},')
+                    cnt = 1
+                    for label, score in node2pred[contig]:
+                        if cnt > inputs.topk:
+                            break
+                        cnt+=1
+                        if score > inputs.t:
+                            file_out.write(f'{label},{score:.2f},')
+                        else:
+                            file_out.write(f'cannot_find_MAGs,low confidence,')
+                    file_out.write('\n')
+        else:
+            with open(f"tmp_pred/predict.csv", 'w') as file_out:
+                file_out.write(f'contig,')
+                file_out.write(f'label,Score,Type,')
+                file_out.write('\n')
+                for contig in node2pred:
+                    file_out.write(f'{contig},')
+                    for label, score in node2pred[contig]:
+                        if score > inputs.t:
+                            if crispr_pred[contig]:
+                                file_out.write(f'{label},{score:.2f},CRISPR,')
+                            else:
+                                file_out.write(f'{label},{score:.2f},Pred,')
+                        else:
+                            file_out.write(f'cannot_find_MAGs,low confidence,NA,')
+                        break
+                    file_out.write('\n')
+
 
 
 
