@@ -298,7 +298,7 @@ if inputs.mode == 'virus':
                             else:
                                 file_out.write(f'{label},{score:.2f},Pred,')
                         else:
-                            file_out.write(f'cannot_find_MAGs,low confidence,NA,')
+                            file_out.write(f'cannot_find_MAGs,low_confidence,not_available,')
                         break
                     file_out.write('\n')
 
