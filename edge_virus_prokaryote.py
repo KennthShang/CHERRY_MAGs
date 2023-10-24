@@ -90,7 +90,7 @@ try:
             ident = float(parse[-3])
             length = float(parse[-2])
             slen = float(parse[-1])
-            if virus not in crispr_pred and length/slen > 0.95 and ident > 0.95:
+            if virus not in crispr_pred and length/slen > 0.95 and ident > 90:
                 crispr_pred[virus] = prokaryote
 except:
     print("no crispr result found")
