@@ -293,9 +293,10 @@ if inputs.mode == 'virus':
                     file_out.write(f'{contig},')
                     for label, score in node2pred[contig]:
                         if score > inputs.t:
-                            if crispr_pred[contig]:
+                            try: 
+                                _ = crispr_pred[contig]:
                                 file_out.write(f'{label},{score:.2f},CRISPR,')
-                            else:
+                            except:
                                 file_out.write(f'{label},{score:.2f},Pred,')
                         else:
                             file_out.write(f'cannot_find_MAGs,low_confidence,not_available,')
