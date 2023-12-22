@@ -294,7 +294,7 @@ if inputs.mode == 'virus':
                     for label, score in node2pred[contig]:
                         if score > inputs.t:
                             try: 
-                                _ = crispr_pred[contig]:
+                                _ = crispr_pred[contig]
                                 file_out.write(f'{label},{score:.2f},CRISPR,')
                             except:
                                 file_out.write(f'{label},{score:.2f},Pred,')
